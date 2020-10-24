@@ -1,0 +1,3 @@
+# AutomataYaBata
+
+Automating stuff
