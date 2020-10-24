@@ -2,6 +2,8 @@ import requests
 import time
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
 import os
+from sys import platform
+
 requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
 headers = {
@@ -118,7 +120,10 @@ while True:
         time.sleep(10)
         num_tries -= 1
         if(code != 0):
-            code = os.system("nmcli c up TikTak")
+            if(platform == "linux" or platform == "linux2"):
+                code = os.system("nmcli c up TikTak")
+            else:
+                code = os.system("netsh wlan connect name=TikTak")
             print("Failed to connect to TikTak" if code !=0 else "Connected to TikTak")
         if(not num_tries):
             print("Failed to restore internet connection.")
