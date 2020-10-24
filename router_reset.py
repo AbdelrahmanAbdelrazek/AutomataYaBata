@@ -1,7 +1,7 @@
 import requests
 import time
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
-
+import os
 requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
 headers = {
@@ -50,6 +50,10 @@ for line in r.text.splitlines():
     if session_token_search in line:
         session_token = int(line.replace(session_token_search, "").replace("\"", "").replace(";", ""))
         break
+if(session_token == 0):
+    print("Failed to get session token")
+    exit(1)
+    
 if(r.status_code == 200):
     print("Session Token =", str(session_token)+'.')
 else:
@@ -101,6 +105,7 @@ while True:
         print("Disconnected from the Internet.")
         break
 
+code = 1024
 while True:
     num_tries = 18 #3 minutes
     try:
@@ -112,6 +117,9 @@ while True:
         print("Waiting for internet connection.")
         time.sleep(10)
         num_tries -= 1
+        if(code != 0):
+            code = os.system("nmcli c up TikTak")
+            print("Failed to connect to TikTak" if code !=0 else "Connected to TikTak")
         if(not num_tries):
             print("Failed to restore internet connection.")
             print ("Exiting.")
@@ -119,3 +127,4 @@ while True:
 
 # r = requests.get("https://192.168.1.1/ghtml", headers=headers, verify=False)
 # print(r.text)
+#wlp4s0
